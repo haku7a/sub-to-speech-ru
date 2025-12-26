@@ -9,10 +9,20 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract\tesseract.e
 REGION = {'left': 1400, 'top': 410, 'width': 1000, 'height': 250}
 
 
-tts = pyttsx3.init()
-
-tts.setProperty('rate', 180)
-tts.setProperty('volume', 0.9)
+def speak_text(text):
+    try:
+        tts = pyttsx3.init()
+        
+        tts.setProperty('rate', 180)
+        tts.setProperty('volume', 2.0)
+        
+        tts.say(text)
+        tts.runAndWait()
+        
+        tts.stop()
+        
+    except Exception as e:
+        print(f"Ошибка при произношении: {e}")
 
 try:
     with mss.mss() as sct:  
@@ -29,12 +39,10 @@ try:
             if text and text != last_text:
                 print(text)
                 
-                tts.say(text)
-                tts.runAndWait()
-
+                speak_text(text)
                 last_text = text
             
-            time.sleep(0.5)
+            time.sleep(1)
             
 except KeyboardInterrupt:
     print("Остановка программы.")
