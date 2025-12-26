@@ -2,10 +2,17 @@ import pytesseract
 from PIL import Image
 import mss
 import time
+import pyttsx3
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract\tesseract.exe'
 
-REGION = {'left': 0, 'top': 0, 'width': 500, 'height': 500}
+REGION = {'left': 1400, 'top': 410, 'width': 1000, 'height': 250}
+
+
+tts = pyttsx3.init()
+
+tts.setProperty('rate', 180)
+tts.setProperty('volume', 0.9)
 
 try:
     with mss.mss() as sct:  
@@ -21,6 +28,10 @@ try:
             
             if text and text != last_text:
                 print(text)
+                
+                tts.say(text)
+                tts.runAndWait()
+
                 last_text = text
             
             time.sleep(0.5)
