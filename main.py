@@ -46,7 +46,6 @@ try:
             
             filtered_img = Image.fromarray(result_array.astype('uint8'))
             
-            filtered_img = filtered_img.convert('L')
             
 
             text = pytesseract.image_to_string(filtered_img, lang='rus+eng')
