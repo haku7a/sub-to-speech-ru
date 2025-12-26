@@ -3,11 +3,14 @@ from PIL import Image
 import mss
 import time
 import pyttsx3
+import numpy as np
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract\tesseract.exe'
 
-REGION = {'left': 1400, 'top': 410, 'width': 1000, 'height': 250}
+REGION = {'left': 1400, 'top': 200, 'width': 1000, 'height': 800}
 
+TARGET_RGB = (0, 255, 255)
+COLOR_TOLERANCE = 30 
 
 def speak_text(text):
     try:
@@ -33,7 +36,20 @@ try:
             
             img = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
             
-            text = pytesseract.image_to_string(img, lang='rus+eng')
+            img_array = np.array(img)
+            target = np.array(TARGET_RGB)
+            
+            mask = np.all(np.abs(img_array - target) <= COLOR_TOLERANCE, axis=2)
+            
+            result_array = np.zeros_like(img_array) + 255
+            result_array[mask] = [0, 0, 0] 
+            
+            filtered_img = Image.fromarray(result_array.astype('uint8'))
+            
+            filtered_img = filtered_img.convert('L')
+            
+
+            text = pytesseract.image_to_string(filtered_img, lang='rus+eng')
             text = text.strip()
             
             if text and text != last_text:
