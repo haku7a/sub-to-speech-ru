@@ -54,7 +54,16 @@ try:
             if text and text != last_text:
                 print(text)
                 
-                speak_text(text)
+                if last_text and last_text in text:
+                    start_index = text.find(last_text)
+                    end_index = start_index + len(last_text)
+                    
+                    new_text = text[end_index:].strip()
+                    
+                    speak_text(new_text)
+                else:
+                    speak_text(text)
+                
                 last_text = text
             
             time.sleep(1)
