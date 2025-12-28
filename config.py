@@ -1,6 +1,6 @@
 class Config:
     TESSERACT_CMD = r'C:\Program Files\Tesseract\tesseract.exe'
-    REGION = {'left': 1400, 'top': 200, 'width': 1000, 'height': 1000}
+    REGION = {'left': 1400, 'top': 200, 'width': 1050, 'height': 500}
     TARGET_RGB = (0, 255, 255)
     COLOR_TOLERANCE = 30
     TTS_RATE = 180
