@@ -16,20 +16,27 @@ text_logic = TextStreamProcessor(Config.SIMILARITY_THRESHOLD)
 
 
 
-try:    
-        while True:
-            img = capturer.capture()
-            filtered_img = processor.filter_color(img)
-            raw_text  = recognizer.image_to_text(filtered_img)
 
-            text_to_speak = text_logic.get_new_content(raw_text)
+def main():
+    try:    
+            while True:
+                img = capturer.capture()
+                filtered_img = processor.filter_color(img)
+                raw_text  = recognizer.image_to_text(filtered_img)
+
+                text_to_speak = text_logic.get_new_content(raw_text)
 
 
-            
-            if text_to_speak:
-                speaker.speak(text_to_speak)
-            
-            time.sleep(1)
-            
-except KeyboardInterrupt:
-    print("Остановка программы.")
+                
+                if text_to_speak:
+                    speaker.speak(text_to_speak)
+                
+                time.sleep(1)
+                
+    except KeyboardInterrupt:
+        print("Остановка программы.")
+    finally:
+        capturer.close()
+    
+if __name__ == "__main__":
+    main()
