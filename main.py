@@ -4,11 +4,11 @@ import mss
 import time
 import pyttsx3
 import numpy as np
+import difflib
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract\tesseract.exe'
 
-REGION = {'left': 1400, 'top': 200, 'width': 1000, 'height': 800}
-
+REGION = {'left': 1400, 'top': 200, 'width': 1000, 'height': 1000}
 TARGET_RGB = (0, 255, 255)
 COLOR_TOLERANCE = 30 
 
@@ -48,23 +48,28 @@ try:
             
             
 
-            text = pytesseract.image_to_string(filtered_img, lang='rus+eng')
+            text = pytesseract.image_to_string(filtered_img, lang='rus')
             text = text.strip()
             
-            if text and text != last_text:
-                print(text)
+            if text:
+                similarity = difflib.SequenceMatcher(None, last_text, text).ratio()
+                if last_text:
+                    
+                    if similarity >= 0.9:
+                        last_text = text
+                        continue
                 
-                if last_text and last_text in text:
-                    start_index = text.find(last_text)
+                print(similarity)
+                
+                if last_text and similarity <= 0.9:
+                    start_index = 0
                     end_index = start_index + len(last_text)
-                    
                     new_text = text[end_index:].strip()
-                    
                     speak_text(new_text)
                 else:
                     speak_text(text)
                 
-                last_text = text
+            last_text = text
             
             time.sleep(1)
             
