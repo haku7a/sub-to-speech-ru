@@ -1,21 +1,19 @@
-import pytesseract
 import time
 import difflib
-import re
 
 from config import Config
 from screen import ScreenCapturer
 from image_proc import ImagePreprocessor
 from tts import Speaker
-
-
-
-pytesseract.pytesseract.tesseract_cmd = Config.TESSERACT_CMD
+from ocr import TextRecognizer
 
 
 capturer = ScreenCapturer(Config.REGION)
 processor = ImagePreprocessor(Config.TARGET_RGB, Config.COLOR_TOLERANCE)
 speaker = Speaker(Config.TTS_RATE, Config.TTS_VOLUME)
+recognizer = TextRecognizer(Config.TESSERACT_CMD, Config.LANG)
+
+
 
 try: 
         last_text = ""  
@@ -23,9 +21,7 @@ try:
         while True:
             img = capturer.capture()
             filtered_img = processor.filter_color(img)
-            
-            text = pytesseract.image_to_string(filtered_img, lang=Config.LANG)
-            text = text.strip()
+            text = recognizer.image_to_text(filtered_img)
             
             if text:
                 similarity = difflib.SequenceMatcher(None, last_text, text).ratio()
