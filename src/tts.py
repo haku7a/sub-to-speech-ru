@@ -4,7 +4,7 @@ import pyttsx3
 class Speaker:
     def __init__(self, rate, volume):
         self.rate = rate
-        self.valume = volume
+        self.volume = volume
 
     def speak(self, text):
         if not text:
@@ -13,7 +13,7 @@ class Speaker:
         try:
             engine = pyttsx3.init()
             engine.setProperty('rate', self.rate)
-            engine.setProperty('valume', self.valume)
+            engine.setProperty('volume', self.volume)
 
             engine.say(text)
             engine.runAndWait()
