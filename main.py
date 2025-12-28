@@ -1,11 +1,11 @@
 import time
 
 from config import Config
-from screen import ScreenCapturer
-from image_proc import ImagePreprocessor
-from tts import Speaker
-from ocr import TextRecognizer
-from text_logic import TextStreamProcessor
+from src.screen import ScreenCapturer
+from src.image_proc import ImagePreprocessor
+from src.tts import Speaker
+from src.ocr import TextRecognizer
+from src.text_logic import TextStreamProcessor
 
 
 capturer = ScreenCapturer(Config.REGION)
