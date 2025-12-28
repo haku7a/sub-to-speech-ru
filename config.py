@@ -6,4 +6,4 @@ class Config:
     TTS_RATE = 180
     TTS_VOLUME = 2.0
     LANG = 'rus'
-    SIMILARITY_THRESHOLD = 0.9
+    SIMILARITY_THRESHOLD = 0.85
