@@ -1,3 +1,4 @@
+from config import Config
 import pytesseract
 from PIL import Image
 import mss
@@ -5,19 +6,17 @@ import time
 import pyttsx3
 import numpy as np
 import difflib
+import re
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = Config.TESSERACT_CMD
 
-REGION = {'left': 1400, 'top': 200, 'width': 1000, 'height': 1000}
-TARGET_RGB = (0, 255, 255)
-COLOR_TOLERANCE = 30 
 
 def speak_text(text):
     try:
         tts = pyttsx3.init()
         
-        tts.setProperty('rate', 180)
-        tts.setProperty('volume', 2.0)
+        tts.setProperty('rate', Config.TTS_RATE)
+        tts.setProperty('volume', Config.TTS_VOLUME)
         
         tts.say(text)
         tts.runAndWait()
@@ -32,14 +31,14 @@ try:
         last_text = ""  
         
         while True:
-            screenshot = sct.grab(REGION)
+            screenshot = sct.grab(Config.REGION)
             
             img = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
             
             img_array = np.array(img)
-            target = np.array(TARGET_RGB)
+            target = np.array(Config.TARGET_RGB)
             
-            mask = np.all(np.abs(img_array - target) <= COLOR_TOLERANCE, axis=2)
+            mask = np.all(np.abs(img_array - target) <= Config.COLOR_TOLERANCE, axis=2)
             
             result_array = np.zeros_like(img_array) + 255
             result_array[mask] = [0, 0, 0] 
@@ -48,7 +47,7 @@ try:
             
             
 
-            text = pytesseract.image_to_string(filtered_img, lang='rus')
+            text = pytesseract.image_to_string(filtered_img, lang=Config.LANG)
             text = text.strip()
             
             if text:
@@ -59,7 +58,7 @@ try:
                         last_text = text
                         continue
                 
-                print(similarity)
+                print(text)
                 
                 if last_text and similarity <= 0.9:
                     start_index = 0
