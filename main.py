@@ -1,12 +1,15 @@
-from config import Config
 import pytesseract
 from PIL import Image
-import mss
 import time
 import pyttsx3
 import numpy as np
 import difflib
 import re
+
+from config import Config
+from screen import ScreenCapturer
+
+
 
 pytesseract.pytesseract.tesseract_cmd = Config.TESSERACT_CMD
 
@@ -14,26 +17,22 @@ pytesseract.pytesseract.tesseract_cmd = Config.TESSERACT_CMD
 def speak_text(text):
     try:
         tts = pyttsx3.init()
-        
         tts.setProperty('rate', Config.TTS_RATE)
         tts.setProperty('volume', Config.TTS_VOLUME)
-        
         tts.say(text)
         tts.runAndWait()
-        
         tts.stop()
         
     except Exception as e:
         print(f"Ошибка при произношении: {e}")
 
-try:
-    with mss.mss() as sct:  
+capturer = ScreenCapturer(Config.REGION)
+
+try: 
         last_text = ""  
         
         while True:
-            screenshot = sct.grab(Config.REGION)
-            
-            img = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
+            img = capturer.capture()
             
             img_array = np.array(img)
             target = np.array(Config.TARGET_RGB)
